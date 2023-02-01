@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  private final DriveSystem Drive = new DriveSystem();
+  private final ArmSystem ArmControl = new ArmSystem();
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -81,7 +83,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // Tell the robot container to get the latest joystick values
+    m_robotContainer.readButtons();
+    // Call the DriveSystem.drive() method with the speed and direction joystick values
+    Drive.drive(RobotContainer.speed, RobotContainer.direction);
+    // Call the ArmSystem.turnArm() method with the arm rotation value
+    ArmControl.turnArm(RobotContainer.armZRot);
+  }
 
   @Override
   public void testInit() {
