@@ -6,4 +6,7 @@ public class ArmSystem {
     public void turnArm(double turnSpeed) {
         zRot.set(turnSpeed);
     };
+    public void armDeflection(double rate) {
+        
+    }
 }

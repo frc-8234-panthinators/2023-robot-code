@@ -34,13 +34,13 @@ public class JoystickContainer {
 
     // moving
     public double getSpeed() {
-        return center.getY();
+        return center.getX();
     };
 
     // Changed to center joystick so that it's all together
     // turning
     public double getDirection() {
-        return center.getX();
+        return left.getY();
     };
 
     // left-right direction
@@ -69,6 +69,8 @@ public class JoystickContainer {
     public double getClaw() {
         return clawInitiate.getAsBoolean() ? 1 : -1;
     }
-
+    public boolean getClawBool() {
+        return clawInitiate.getAsBoolean();
+    }
     
 }

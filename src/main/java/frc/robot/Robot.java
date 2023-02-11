@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private final DriveSystem Drive = new DriveSystem();
   private final ArmSystem ArmControl = new ArmSystem();
+  private final PneumaticSystem SolenoidControl = new PneumaticSystem();
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -90,6 +91,8 @@ public class Robot extends TimedRobot {
     Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
     ArmControl.turnArm(RobotContainer.armZRot);
+
+    SolenoidControl.solenoidControl(RobotContainer.clawEngaged);  
   }
 
   @Override
