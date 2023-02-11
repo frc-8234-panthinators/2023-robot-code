@@ -7,7 +7,7 @@ public class ArmSystem {
     public void turnArm(double turnSpeed) {
         zRot.set(turnSpeed);
     };
-    public void extendArm(double extendSpeed) {
-        armExtend.set(extendSpeed);
+    public void armDeflection(double rate) {
+        
     }
 }
