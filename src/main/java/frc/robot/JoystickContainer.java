@@ -64,6 +64,9 @@ public class JoystickContainer {
         }
         return accumulator;
     }
+    public boolean getExtensionBool(){
+        return extensionEnabled.getAsBoolean();
+    }
 
     // returns 1 if pressed and -1 if not pressed
     public double getClaw() {
