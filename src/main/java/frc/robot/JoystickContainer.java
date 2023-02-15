@@ -55,14 +55,16 @@ public class JoystickContainer {
 
     // extension change amount
     public double getExtension() {
-        double accumulator = 0;
+        /*double accumulator = 0;
         if (extensionEnabled.getAsBoolean()) {
             accumulator++;
         } 
         if (retractionEnabled.getAsBoolean()) {
             accumulator--;
         }
-        return accumulator;
+        return accumulator;*/
+        //^^TF is this??
+        return extensionEnabled.getAsBoolean() ? 1 : -1;
     }
     public boolean getExtensionBool(){
         return extensionEnabled.getAsBoolean();
@@ -74,6 +76,9 @@ public class JoystickContainer {
     }
     public boolean getClawBool() {
         return clawInitiate.getAsBoolean();
+    }
+    public boolean getBoostEnabled(){
+        return speedBoost.getAsBoolean();
     }
     
 }
