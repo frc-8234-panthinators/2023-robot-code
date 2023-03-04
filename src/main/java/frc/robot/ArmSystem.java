@@ -13,7 +13,7 @@ public class ArmSystem {
         }else if(turnSpeed>0){
             armZRotTime++;
         }
-        zRot.set(turnSpeed * 0.5);
+        zRot.set(turnSpeed);
     };
     public void armDeflection(double rate) {
         
