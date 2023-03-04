@@ -1,12 +1,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class PneumaticSystem {
-    Solenoid clawActuator1 = new Solenoid(PneumaticsModuleType.REVPH, 3);
+    DoubleSolenoid clawActuator1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 0);
     
     public void solenoidControl (boolean state) {
-        clawActuator1.set(state);
+        if (state) {
+            clawActuator1.set(Value.kForward);
+        } else {
+            clawActuator1.set(Value.kReverse);
+        }
     }
 }

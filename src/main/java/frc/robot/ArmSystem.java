@@ -2,8 +2,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 public class ArmSystem {
-    private static WPI_TalonFX zRot = new WPI_TalonFX(5);
-    private static WPI_TalonFX armExtension = new WPI_TalonFX(6);
+    private static WPI_TalonFX zRot = new WPI_TalonFX(7);
+    private static WPI_TalonFX armExtension = new WPI_TalonFX(8);
     public int armExtendTime = 0;//Number of times
     public int armZRotTime = 0;
     public void turnArm(double turnSpeed) {
@@ -13,7 +13,7 @@ public class ArmSystem {
         }else if(turnSpeed>0){
             armZRotTime++;
         }
-        zRot.set(turnSpeed);
+        zRot.set(turnSpeed * 0.5);
     };
     public void armDeflection(double rate) {
         
