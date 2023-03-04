@@ -21,7 +21,7 @@ public class JoystickContainer {
     // public boolean demoModeDisengaged;
     final JoystickButton extensionEnabled = new JoystickButton(left, 11);
     final JoystickButton retractionEnabled = new JoystickButton(left, 10);
-    final JoystickButton clawInitiate = new JoystickButton(left, 1);
+    final JoystickButton clawInitiate = new JoystickButton(right, 1);
     // final JoystickButton intakeReverse = new JoystickButton(right, 3);
     // final JoystickButton shooterIntakeReverse = new JoystickButton(right, 5);
     // final JoystickButton manualShooterIntake = new JoystickButton(right, 4);
@@ -34,23 +34,23 @@ public class JoystickContainer {
 
     // moving
     public double getSpeed() {
-        return center.getX();
+        return left.getX();
     };
 
     // Changed to center joystick so that it's all together
     // turning
     public double getDirection() {
-        return left.getY();
+        return center.getY();
     };
 
     // left-right direction
     public double getArmDirection() {
-        return left.getX();
+        return right.getX();
     }
 
     // up-down direction
     public double getArmDeflection() {
-        return left.getY();
+        return right.getY();
     }
 
     // extension change amount
