@@ -91,7 +91,9 @@ public class Robot extends TimedRobot {
     Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
     ArmControl.turnArm(RobotContainer.armZRot);
-    ArmControl.extendArm(RobotContainer.armExtend);
+    //disabled while extension is not finished
+    //ArmControl.extendArm(RobotContainer.armExtend);
+    ArmControl.armDeflection(RobotContainer.armDeflect);
     SolenoidControl.solenoidControl(RobotContainer.clawEngaged);  
   }
 
