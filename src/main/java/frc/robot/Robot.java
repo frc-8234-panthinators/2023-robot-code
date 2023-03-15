@@ -88,13 +88,18 @@ public class Robot extends TimedRobot {
     // Tell the robot container to get the latest joystick values
     m_robotContainer.readButtons();
     // Call the DriveSystem.drive() method with the speed and direction joystick values
-    Drive.drive(RobotContainer.speed, RobotContainer.direction);
+    //Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
     ArmControl.turnArm(RobotContainer.armZRot);
     //disabled while extension is not finished
     //ArmControl.extendArm(RobotContainer.armExtend);
     ArmControl.armDeflection(RobotContainer.armDeflect);
-    SolenoidControl.solenoidControl(RobotContainer.clawEngaged);  
+    SolenoidControl.solenoidControl(RobotContainer.clawEngaged);
+    if(RobotContainer.triggerLevel){
+      Drive.drive(GyroControl.getAngle()/Constants.maxPlatformAngle*0.8,0);
+    }else{
+      Drive.drive(RobotContainer.speed, RobotContainer.direction);
+    }
   }
 
   @Override
