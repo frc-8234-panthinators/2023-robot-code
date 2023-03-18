@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.security.spec.DSAParameterSpec;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,7 +22,10 @@ public class Robot extends TimedRobot {
   private final ArmSystem ArmControl = new ArmSystem();
   private final PneumaticSystem SolenoidControl = new PneumaticSystem();
   private Command m_autonomousCommand;
-
+  DigitalInput reverseExtendSwitch = new DigitalInput(0);
+  DigitalInput forwardExtendSwitch = new DigitalInput(1);
+  DigitalInput leftTurretSwitch = new DigitalInput(2);
+  DigitalInput rightTurretSwitch = new DigitalInput(3);
   private RobotContainer m_robotContainer;
 
   /**
@@ -31,6 +37,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    ArmControl.initMotors();
   }
 
   /**
@@ -86,13 +93,45 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Tell the robot container to get the latest joystick values
+    // This has to be the first thing called in this method
     m_robotContainer.readButtons();
+
+    if (reverseExtendSwitch.get() && RobotContainer.armExtend <= 0d) {
+      ArmControl.extendArm(RobotContainer.armExtend);
+    } else if (forwardExtendSwitch.get() && RobotContainer.armExtend >= 0d) {
+      ArmControl.extendArm(RobotContainer.armExtend);
+    } else if (!forwardExtendSwitch.get() && !reverseExtendSwitch.get()) {
+      ArmControl.extendArm(RobotContainer.armExtend);
+    } else {
+      ArmControl.extendArm(0);
+    }
+
+    if (leftTurretSwitch.get() && RobotContainer.armZRot >= 0d) {
+      ArmControl.turnArm(RobotContainer.armZRot);
+    } else if (rightTurretSwitch.get() && RobotContainer.armZRot <= 0d) {
+      ArmControl.turnArm(RobotContainer.armZRot);
+    } else if (!leftTurretSwitch.get() && !rightTurretSwitch.get()) {
+      ArmControl.turnArm(RobotContainer.armZRot);
+    } else {
+      ArmControl.turnArm(0);
+    }
+    ArmControl.turnArm(RobotContainer.armZRot);
+    //ArmControl.extendArm(RobotContainer.armExtend);
+    if (RobotContainer.recenterArmPressed) {
+      ArmControl.recenterMotorPos();
+    };
+
+    if (RobotContainer.diagPressed) {
+      System.out.println("--------------------");
+      System.out.println("Reverse Extension Limit Switch: " +  String.valueOf(reverseExtendSwitch.get()));
+      System.out.println("Forward Extension Limit Switch: " +  String.valueOf(forwardExtendSwitch.get()));
+      System.out.println("Arm Extension Rate: " + String.valueOf(RobotContainer.armExtend));
+      System.out.println("PID Arm Position: " + String.valueOf(ArmControl.armDeflectionPos));
+      System.out.println("--------------------");
+    }
     // Call the DriveSystem.drive() method with the speed and direction joystick values
     Drive.drive(RobotContainer.speed, RobotContainer.direction);
-    // Call the ArmSystem.turnArm() method with the arm rotation value
-    ArmControl.turnArm(RobotContainer.armZRot);
     //disabled while extension is not finished
-    //ArmControl.extendArm(RobotContainer.armExtend);
     ArmControl.armDeflection(RobotContainer.armDeflect);
     SolenoidControl.solenoidControl(RobotContainer.clawEngaged);  
   }
