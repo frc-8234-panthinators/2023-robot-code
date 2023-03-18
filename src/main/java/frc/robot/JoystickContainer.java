@@ -26,6 +26,7 @@ public class JoystickContainer {
     final JoystickButton retractionEnabled = new JoystickButton(center, 10);
     final JoystickButton clawInitiate = new JoystickButton(right, 1);
     final JoystickButton recenterArmDeflect = new JoystickButton(right, 8);
+    final JoystickButton triggerLevel = new JoystickButton(left, 3);
     // final JoystickButton intakeReverse = new JoystickButton(right, 3);
     // final JoystickButton shooterIntakeReverse = new JoystickButton(right, 5);
     // final JoystickButton manualShooterIntake = new JoystickButton(right, 4);
@@ -104,5 +105,7 @@ public class JoystickContainer {
     public boolean getBoostEnabled(){
         return speedBoost.getAsBoolean();
     }
-    
+    public boolean getTriggerLevel(){
+        return triggerLevel.getAsBoolean();
+    }
 }
