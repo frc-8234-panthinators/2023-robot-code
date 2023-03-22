@@ -21,7 +21,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -69,7 +68,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+
+  }
 
   @Override
   public void teleopInit() {
@@ -93,6 +95,9 @@ public class Robot extends TimedRobot {
     ArmControl.turnArm(RobotContainer.armZRot);
     ArmControl.extendArm(RobotContainer.armExtend);
     SolenoidControl.solenoidControl(RobotContainer.clawEngaged);  
+    while(DriveSystem.getDist()<Constants.autonomousDist){
+      DriveSystem.drive(Constants.autonomousSpeed, 0);
+    }
   }
 
   @Override
