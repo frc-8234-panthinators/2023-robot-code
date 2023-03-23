@@ -14,6 +14,7 @@ public class DriveSystem {
     public static MotorControllerGroup rightSide = new MotorControllerGroup(rightMotor2, rightMotor1);
 
     public static DifferentialDrive drive = new DifferentialDrive(leftSide, rightSide);
+
     public static void drive(double speed, double rotation) {
         drive.arcadeDrive(speed*(RobotContainer.boostEnabled?1:Constants.normalSpeedMultiplier), rotation * 0.6);
     }
