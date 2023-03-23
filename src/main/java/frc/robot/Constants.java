@@ -29,4 +29,9 @@ public final class Constants {
   public static final double armZRotRate = 0.1;//The maximum rate at which the arm rotates when the motor is engaged
   public static final double armZRotRatio = 1.0;//How much the arm rotates PER ROTATION of the arm rotation gear
   public static final double maxPlatformAngle = 15.0;
+  public static final double[][] operativeRange = {
+    {1/4*Math.PI, 3/4*Math.PI},
+    {5/4*Math.PI, 7/4*Math.PI}
+  };//Operative rotation range in RADIANS
+  //THESE NUMBERS WILL NEED TO BE CHANGED ONCE WE DETERMINE THE CORRECT OPERATIVE RANGE
 }
