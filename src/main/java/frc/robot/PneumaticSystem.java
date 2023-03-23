@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class PneumaticSystem {
-    DoubleSolenoid clawActuator1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 0);
+    DoubleSolenoid clawActuator1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
     
     public void solenoidControl (boolean state) {
         if (state) {
