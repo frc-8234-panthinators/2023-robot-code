@@ -132,7 +132,12 @@ public class Robot extends TimedRobot {
     // Call the DriveSystem.drive() method with the speed and direction joystick values
     //Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
-    ArmControl.turnArm(RobotContainer.armZRot);
+
+      if((ArmControl.getArmRot()>Constants.operativeRange[0][0]&&ArmControl.getArmRot()<Constants.operativeRange[0][1])||(ArmControl.getArmRot()>Constants.operativeRange[1][0]&&ArmControl.getArmRot()<Constants.operativeRange[1][1])){
+        ArmControl.turnArm(RobotContainer.armZRot);
+      }else if(!forwardExtendSwitch.get()){
+        ArmControl.turnArm(RobotContainer.armZRot);
+      }
     //disabled while extension is not finished
     ArmControl.armDeflection(RobotContainer.armDeflect);
     SolenoidControl.solenoidControl(RobotContainer.clawEngaged);
