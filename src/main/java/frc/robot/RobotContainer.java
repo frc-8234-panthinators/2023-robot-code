@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   public JoystickContainer controller = new JoystickContainer();
-  public static double speed, direction, armZRot, armExtend;
-  public static boolean clawEngaged, boostEnabled;
+  public static double speed, direction, armZRot, armExtend, armDeflect;
+  public static boolean clawEngaged, boostEnabled, diagPressed, recenterArmPressed, triggerLevel;
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -70,8 +70,12 @@ public class RobotContainer {
     speed = controller.getSpeed();
     direction = controller.getDirection();
     armZRot = Math.round(controller.getArmDirection())*Constants.armZRotRate;
-    armExtend = controller.getExtensionBool()?Constants.armExtensionRotRate:0;
+    armDeflect = Math.round(controller.getArmDeflection())*Constants.armDeflectionRotRate;
+    armExtend = controller.getExtensionState()*Constants.armExtensionRotRate;
     clawEngaged = controller.getClawBool();
     boostEnabled = controller.getBoostEnabled();
+    diagPressed = controller.getDiagnosticsButton();
+    recenterArmPressed = controller.armRecenter();
+    triggerLevel = controller.getTriggerLevel();
   }
 }
