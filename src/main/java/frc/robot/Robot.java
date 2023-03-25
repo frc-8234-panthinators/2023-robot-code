@@ -27,7 +27,6 @@ public class Robot extends TimedRobot {
   DigitalInput leftTurretSwitch = new DigitalInput(2);
   DigitalInput rightTurretSwitch = new DigitalInput(3);
   private RobotContainer m_robotContainer;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -76,7 +75,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    while(DriveSystem.getDist()<Constants.autonomousDist){
+      DriveSystem.drive(Constants.autonomousSpeed, 0);
+    }
+    DriveSystem.drive(0,0);
+  }
 
   @Override
   public void teleopInit() {
@@ -132,6 +136,7 @@ public class Robot extends TimedRobot {
     // Call the DriveSystem.drive() method with the speed and direction joystick values
     //Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
+    ArmControl.extendArm(RobotContainer.armExtend);
 
       if((ArmControl.getArmRot()>Constants.operativeRange[0][0]&&ArmControl.getArmRot()<Constants.operativeRange[0][1])||(ArmControl.getArmRot()>Constants.operativeRange[1][0]&&ArmControl.getArmRot()<Constants.operativeRange[1][1])){
         ArmControl.turnArm(RobotContainer.armZRot);

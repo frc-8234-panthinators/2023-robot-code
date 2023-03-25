@@ -28,6 +28,9 @@ public final class Constants {
 
   public static final double armZRotRate = 0.1;//The maximum rate at which the arm rotates when the motor is engaged
   public static final double armZRotRatio = 1.0;//How much the arm rotates PER ROTATION of the arm rotation gear
+  public static final double wheelRadius = 3.03125;//This is in INCHES
+  public static final double autonomousDist = 300.0;//This is how far the robot will travel in INCHES
+  public static final double autonomousSpeed = 0.25;//This is the speed at which the robot travels in autonomous
   public static final double maxPlatformAngle = 15.0;
 
   public static final double[][] operativeRange = {
