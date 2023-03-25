@@ -69,8 +69,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
-
+    while(DriveSystem.getDist()<Constants.autonomousDist){
+      DriveSystem.drive(Constants.autonomousSpeed, 0);
+    }
+    DriveSystem.drive(0,0);
   }
 
   @Override
@@ -94,10 +96,7 @@ public class Robot extends TimedRobot {
     // Call the ArmSystem.turnArm() method with the arm rotation value
     ArmControl.turnArm(RobotContainer.armZRot);
     ArmControl.extendArm(RobotContainer.armExtend);
-    SolenoidControl.solenoidControl(RobotContainer.clawEngaged);  
-    while(DriveSystem.getDist()<Constants.autonomousDist){
-      DriveSystem.drive(Constants.autonomousSpeed, 0);
-    }
+    SolenoidControl.solenoidControl(RobotContainer.clawEngaged);
   }
 
   @Override
