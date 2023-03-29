@@ -137,8 +137,14 @@ public class Robot extends TimedRobot {
     //Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
     ArmControl.extendArm(RobotContainer.armExtend);
+ if((ArmControl.getArmRot()>Constants.operativeRange[0][0]
+      &&ArmControl.getArmRot()<Constants.operativeRange[0][1])
+      ||
+      ((ArmControl.getArmRot()>Constants.operativeRange[1][0]
+      &&ArmControl.getArmRot()<1)
+      ||(ArmControl.getArmRot()<Constants.operativeRange[1][1]
+      &&ArmControl.getArmRot()>-1))){
 
-      if((ArmControl.getArmRot()>Constants.operativeRange[0][0]&&ArmControl.getArmRot()<Constants.operativeRange[0][1])||(ArmControl.getArmRot()>Constants.operativeRange[1][0]&&ArmControl.getArmRot()<Constants.operativeRange[1][1])){
         ArmControl.turnArm(RobotContainer.armZRot);
       }else if(!forwardExtendSwitch.get()){
         ArmControl.turnArm(RobotContainer.armZRot);
