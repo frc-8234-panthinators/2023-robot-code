@@ -27,12 +27,20 @@ public class Robot extends TimedRobot {
   DigitalInput leftTurretSwitch = new DigitalInput(2);
   DigitalInput rightTurretSwitch = new DigitalInput(3);
   private RobotContainer m_robotContainer;
+  public int autoRuns = 0;
+  private long autoStartTime = 0;
+  public static final double reverseTimeS = 4;
+  private boolean hitRamp = false;
+  private boolean firstRun = false;
+  private boolean extenderComplete = false;
+  private boolean deflectComplete = false;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    GyroControl.initGyro();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -65,21 +73,64 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    GyroControl.resetGyro();
+    autoStartTime = System.currentTimeMillis();
+    autoRuns = 0;
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    while(DriveSystem.getDist()<Constants.autonomousDist){
-      DriveSystem.drive(Constants.autonomousSpeed, 0);
+    final long currentAutoTime = System.currentTimeMillis() - autoStartTime;
+    final double cubePos = 1000;
+    final double offset = 50;
+    long retractDelay = 500; //IN MILLISECONDS
+    long retractStart = 0;
+
+    // Auto Part 1 (Scoring):
+    if (ArmControl.getArmDeflectPos() >= cubePos-offset && ArmControl.getArmDeflectPos() <= cubePos+offset) { // Check if arm is in position
+      
+      if (reverseExtendSwitch.get()) { // Wait for extended limit switch before continuing
+        ArmControl.extendArm(0);
+        final long retraction = System.currentTimeMillis() - retractStart;
+        SolenoidControl.solenoidControl(true);
+
+        if (retractDelay < retraction) { // Wait for the retraction delay before retracting arm (to make sure game piece is placed)
+
+          if (forwardExtendSwitch.get()) { // Wait for retracted limit switch before continuing
+            ArmControl.extendArm(0);
+            extenderComplete = true;
+            SolenoidControl.solenoidControl(false); // Close claw now that it is safely away from the game piece
+
+            if (ArmControl.getArmDeflectPos() >= 0-offset && ArmControl.getArmDeflectPos() <= cubePos+offset) { // Wait until arm is in position and finish part 1
+              deflectComplete = true;
+            } else { // Reset arm within bumper for safety (starting position)
+              ArmControl.setArmDeflect(0);
+            }
+            
+          } else { // Continue retracting until limit switch pressed
+            ArmControl.extendArm(-1);
+          }
+        }
+      } else { // Continue extending arm until limit switch pressed, and capture the latest time in millis for the retraction delay
+        retractStart = System.currentTimeMillis();
+        ArmControl.extendArm(1);
+      }
+    } else { // Keep moving arm until it's in position
+      ArmControl.setArmDeflect(cubePos);
     }
-    DriveSystem.drive(0,0);
+
+    // Auto Part 2 (Balancing):
+    if (extenderComplete && deflectComplete) { // Wait for part 1 to complete (arm safely within bumpers)
+
+      if (GyroControl.getAngle() >= 1 || hitRamp) { // If the gyro detects large angle, or the ramp has been hit, switch to gyro control
+        hitRamp = true;
+        Drive.drive(0, GyroControl.getAngle()/Constants.maxPlatformAngle*0.8);
+
+      } else if (!hitRamp) { // If the ramp hasn't been hit, continue driving backwards
+        Drive.drive(0, 0.75);
+      }
+    }
   }
 
   @Override
@@ -96,6 +147,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    System.out.println(GyroControl.getAngle());
     // Tell the robot container to get the latest joystick values
     // This has to be the first thing called in this method
     m_robotContainer.readButtons();
@@ -110,21 +162,29 @@ public class Robot extends TimedRobot {
       ArmControl.extendArm(0);
     }
 
-    if (leftTurretSwitch.get() && RobotContainer.armZRot >= 0d) {
+    if (leftTurretSwitch.get() && RobotContainer.armZRot <= 0d) {
+      /*if(ArmControl.getArmRot()<Constants.operativeRange[0][0] && RobotContainer.armZRot >= 0d) {
+        ArmControl.turnArm(RobotContainer.armZRot);
+      } else if(ArmControl.getArmRot()>Constants.operativeRange[0][1] && RobotContainer.armZRot <= 0d) {
+        ArmControl.turnArm(RobotContainer.armZRot);
+      } else if (ArmControl.getArmRot()<Constants.operativeRange[0][1] && ArmControl.getArmRot()>Constants.operativeRange[0][0]) {
+        ArmControl.turnArm(RobotContainer.armZRot);
+      } else if(forwardExtendSwitch.get()){//If fully retracted*/
       ArmControl.turnArm(RobotContainer.armZRot);
-    } else if (rightTurretSwitch.get() && RobotContainer.armZRot <= 0d) {
-      ArmControl.turnArm(RobotContainer.armZRot);
+      /*} else {
+        ArmControl.turnArm(0);
+      }*/
+    } else if (rightTurretSwitch.get() && RobotContainer.armZRot >= 0d) {
+        ArmControl.turnArm(RobotContainer.armZRot);
     } else if (!leftTurretSwitch.get() && !rightTurretSwitch.get()) {
-      ArmControl.turnArm(RobotContainer.armZRot);
+        ArmControl.turnArm(RobotContainer.armZRot);
     } else {
       ArmControl.turnArm(0);
     }
-    ArmControl.turnArm(RobotContainer.armZRot);
     //ArmControl.extendArm(RobotContainer.armExtend);
     if (RobotContainer.recenterArmPressed) {
       ArmControl.recenterMotorPos();
     };
-
     if (RobotContainer.diagPressed) {
       System.out.println("--------------------");
       System.out.println("Reverse Extension Limit Switch: " +  String.valueOf(reverseExtendSwitch.get()));
@@ -136,24 +196,12 @@ public class Robot extends TimedRobot {
     // Call the DriveSystem.drive() method with the speed and direction joystick values
     //Drive.drive(RobotContainer.speed, RobotContainer.direction);
     // Call the ArmSystem.turnArm() method with the arm rotation value
-    ArmControl.extendArm(RobotContainer.armExtend);
- if((ArmControl.getArmRot()>Constants.operativeRange[0][0]
-      &&ArmControl.getArmRot()<Constants.operativeRange[0][1])
-      ||
-      ((ArmControl.getArmRot()>Constants.operativeRange[1][0]
-      &&ArmControl.getArmRot()<1)
-      ||(ArmControl.getArmRot()<Constants.operativeRange[1][1]
-      &&ArmControl.getArmRot()>-1))){
-
-        ArmControl.turnArm(RobotContainer.armZRot);
-      }else if(!forwardExtendSwitch.get()){
-        ArmControl.turnArm(RobotContainer.armZRot);
-      }
+ 
     //disabled while extension is not finished
     ArmControl.armDeflection(RobotContainer.armDeflect);
     SolenoidControl.solenoidControl(RobotContainer.clawEngaged);
     if(RobotContainer.triggerLevel){
-      Drive.drive(GyroControl.getAngle()/Constants.maxPlatformAngle*0.8,0);
+      Drive.drive(0, GyroControl.getAngle()/Constants.maxPlatformAngle*-1);
     }else{
       Drive.drive(RobotContainer.speed, RobotContainer.direction);
     }

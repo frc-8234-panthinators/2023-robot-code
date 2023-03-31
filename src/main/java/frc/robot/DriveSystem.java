@@ -16,7 +16,7 @@ public class DriveSystem {
     public static DifferentialDrive drive = new DifferentialDrive(leftSide, rightSide);
 
     public static void drive(double speed, double rotation) {
-        drive.arcadeDrive(speed*(RobotContainer.boostEnabled?1:Constants.normalSpeedMultiplier), rotation * 0.6);
+        drive.arcadeDrive(speed * 0.6, rotation * (RobotContainer.boostEnabled?1:Constants.normalSpeedMultiplier));
     }
     public static double getDist(){ 
         //Gets the average of the two motors integral accumulator (we're assuming that this is meaured in cycles)

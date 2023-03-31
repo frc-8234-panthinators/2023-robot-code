@@ -9,7 +9,7 @@ public class JoystickContainer {
     public Joystick left = new Joystick(0);
     public Joystick center = new Joystick(1);
     public Joystick right = new Joystick(2);
-    final JoystickButton speedBoost = new JoystickButton(left, 3);
+    final JoystickButton speedBoost = new JoystickButton(center, 3);
     // final JoystickButton teleopCargoLock = new JoystickButton(left, 3);
     // final JoystickButton aimBotToggle = new JoystickButton(center, 2);
 
@@ -39,7 +39,7 @@ public class JoystickContainer {
 
     // moving
     public double getSpeed() {
-        return center.getX();
+        return left.getX();
     };
 
     public boolean getDiagnosticsButton() {
@@ -49,7 +49,7 @@ public class JoystickContainer {
     // Changed to center joystick so that it's all together
     // turning
     public double getDirection() {
-        return left.getY();
+        return center.getY();
     };
 
     // left-right direction
