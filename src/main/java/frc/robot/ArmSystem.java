@@ -17,7 +17,15 @@ public class ArmSystem {
     private final double gF = 0.1;
     private final double gP = 0.1;
     public double armDeflectionPos = 0d;
+    public double zRotPos = 0d;
     public void initMotors() {
+        zRot.configFactoryDefault();
+        zRot.setInverted(false);
+        zRot.setSensorPhase(false);
+        zRot.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        zRot.config_kF(0, gF);
+        zRot.config_kP(0, gP);
+        zRot.setNeutralMode(NeutralMode.Coast);
         armDeflection.configFactoryDefault();
         armDeflection.setInverted(false);
         armDeflection.setSensorPhase(false);
@@ -36,11 +44,15 @@ public class ArmSystem {
         }else if(turnSpeed>0){
             armZRotTime++;
         }
-        zRot.set(turnSpeed);
+        zRotPos += turnSpeed;
+        zRot.set(TalonFXControlMode.Position, zRotPos);
     };
     public void armDeflection(double rate) {
         armDeflectionPos -= rate;
         armDeflection.set(TalonFXControlMode.Position, armDeflectionPos);
+    }
+    public void setArmDeflect(double pos) {
+        armDeflection.set(TalonFXControlMode.Position, pos);
     }
     public void extendArm(double extendSpeed){
         //armExtendTime=armExtendTime+(extendSpeed<0?-1:extendSpeed>0?1:0);
@@ -50,6 +62,9 @@ public class ArmSystem {
             armExtendTime++;
         }
         armExtension.set(extendSpeed);
+    }
+    public double getArmDeflectPos() {
+        return armDeflection.getSelectedSensorPosition();
     }
     public double getArmRotSpeed(){
         return(zRot.get());
